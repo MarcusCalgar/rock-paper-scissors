@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Rock, Paper, Scissors</title>
+        <!-- <link rel="stylesheet" href="style.css" type="text/css"> -->
+        <link href="https://fonts.googleapis.com/css?family=Concert+One|Fredoka+One&display=swap" rel="stylesheet">
+
+        <style>
+            body {
+                background-color: rgba(189, 243, 189, 0.5);
+            }
+
+            h1 {
+                text-transform: uppercase;
+                color: darkred;
+                text-align: center;
+                font-family: 'Fredoka One', cursive;
+                font-size: 56px;
+            }
+
+            main {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                grid-gap: 10px;
+                justify-items: center;
+            }
+
+            .buttons {
+                display: grid;
+                grid-template-rows: repeat(3 1fr);
+                row-gap: 25px;
+                justify-items: center;
+            }
+
+            caption {
+                font-family: 'Fredoka One', cursive;
+                font-size: 40px;
+                text-align: center;
+                color: darkred;
+                padding-top: 25px;
+                padding-bottom: 40px;
+            }
+
+            h2 {
+                font-family: 'Fredoka One', cursive;
+                font-size: 40px;
+                color: darkred;
+                text-align: center;
+            }
+
+            p {
+                font-size: 26px;
+                font-family: 'Concert One', cursive;
+            }
+
+            .image {
+                border-color: green;
+                border-width: 5px;
+                border-style: solid;
+                border-radius: 10px;
+            }
+
+            #Rock, #Paper, #Scissors {
+                background-color: lightgreen;
+                border-color: green;
+                border-width: 5px;
+                border-style: solid;
+                border-radius: 10px;
+                height: auto;
+                width: auto;
+            }
+
+            table {
+                border: 5px solid green;
+                border-radius: 5px;
+            }
+
+            th {
+                font-size: 25px;
+                font-family: 'Concert One', cursive;
+                padding: 10px;
+            }
+
+            td {
+                font-size: 15px;
+                font-family: 'Concert One', cursive;
+                padding: 5px;
+                text-align: center;
+            }
+
+            tr {
+                background-color: ghostwhite;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Rock, Paper, Scissors</h1>
+            <p style="text-align: center";>Welcome to the game! Your goal is to beat the computer. To do this, get 5 points before the computer does.</p>
+        <main>
+            <div class="rules">
+                <h2>Rules</h2>   
+                <img src="./rules.png" alt="rules" class="image">  
+            </div>            
+
+            <div class="play">
+                <p>Pick your selection to start the game!</p>
+              <div class="buttons">
+                <button type="button" value="Rock" id="Rock"><img src="./rock.png" alt="rock"></button>
+                <button type="button" value="Paper" id="Paper"><img src="./paper.png" alt="paper"></button>
+                <button type="button" value="Scissors" id="Scissors"><img src="./scissors.png" alt="scissors"></button>      
+              </div>            
+            </div>
+
+            <div class="results">
+                <table id="table">
+                    <caption>Results</caption>
+                    <tr>
+                        <th>Round</th>
+                        <th>Your Score</th>
+                        <th>Computer Score</th>
+                    </tr>
+                </table>
+            </div>
+        </main>
+        <script>            
+        let playerScore = 0;
+        let computerScore = 0;
+        let playerSelection = '';
+        const buttons = document.querySelectorAll('button'); 
+        const table = document.getElementById("table");
+        let rN = 1;
+        buttons.forEach((button) => {
+            button.addEventListener('click', (e) => {  
+            
+            const newRow = document.createElement("tr");
+            const roundNumber = document.createElement("td");
+            const playerData = document.createElement("td");
+            const compData = document.createElement("td");            
+
+            playerSelection = button.value;
+            let result = playRound(playerSelection, computerPlay());
+            alert(result);
+            
+            if (result === 'Paper beats rock. You lose.' || result === 'Rock beats scissors. You lose.' || result === 'Scissors beats paper. You lose.'){
+                            computerScore++;
+                            showScore();
+                        } else if (result === 'Paper beats rock. You win!' || result === 'Rock beats scissors. You win!' || result === 'Scissors beats paper. You win!'){
+                            playerScore++;
+                            showScore();
+                        } else if (result === 'It\'s a tie! Try again.'){
+                            showScore();
+                        }
+            roundNumber.textContent = rN;
+            playerData.textContent = playerScore;
+            compData.textContent = computerScore;
+
+            newRow.appendChild(roundNumber);
+            newRow.appendChild(playerData);
+            newRow.appendChild(compData);
+            table.appendChild(newRow);
+
+            if (playerScore === 5){
+                alert("Congratulations! You have won!")
+                } else if (computerScore === 5){
+                alert("You have lost. Better luck next time!")
+                }   
+            rN++;         
+            });
+        });
+        //Computer Selection Function
+        function computerPlay(){
+                                    let computerSelection = Math.random();
+                                    if (computerSelection >= 0.667){
+                                        computerSelection = "Rock";
+                                    } else if (computerSelection >= 0.334){
+                                        computerSelection = "Paper";
+                                    } else {
+                                        computerSelection = "Scissors";
+                                    }
+                                    return computerSelection;
+                                }    
+                                
+        //Declaring the score showing function         
+        function showScore(){
+            alert('Your score: ' + playerScore + " " + 'Computer score: ' + computerScore);
+        }                    
+                       
+        //Play a round function
+
+        function playRound(playerSelection, computerSelection){                         
+                            
+        // Evaluation
+
+            if (playerSelection === computerSelection){
+                return 'It\'s a tie! Try again.';               
+                } else if (playerSelection === 'Rock' && computerSelection === 'Paper'){
+                return 'Paper beats rock. You lose.';
+                } else if (playerSelection === 'Rock' && computerSelection === 'Scissors'){
+                return 'Rock beats scissors. You win!';
+                } else if (playerSelection === 'Paper' && computerSelection === 'Rock'){
+                return 'Paper beats rock. You win!';
+                } else if (playerSelection === 'Paper' && computerSelection === 'Scissors'){
+                return 'Scissors beats paper. You lose.';
+                } else if (playerSelection === 'Scissors' && computerSelection === 'Rock'){
+                return 'Rock beats scissors. You lose.';
+                } else if (playerSelection === 'Scissors' && computerSelection === 'Paper'){
+                return 'Scissors beats paper. You win!';
+                } else {
+                alert ('Whooops! Something went wrong. Make sure you enter either rock, paper, or scissors!')
+                }
+        } 
+     
+        </script>
+    </body>
+</html>
